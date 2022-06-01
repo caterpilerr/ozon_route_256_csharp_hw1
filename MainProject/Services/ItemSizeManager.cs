@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 
 using MainProject.Contracts.Entities.ValueObjects;
@@ -10,7 +10,7 @@ namespace MainProject.Services
     {
         public static SizeType GetSizeType(VolumeWeightData data)
         {
-            var allSize = new List<long>
+            var allSize = new [] 
                 { data.Height, data.Length, data.Width, data.PackagedHeight, data.PackagedLength, data.PackagedWidth };
 
             long maxSize = allSize.Max();
@@ -20,15 +20,15 @@ namespace MainProject.Services
                 return SizeType.Max;
             }
 
-            if (new [] { data.PackagedWeight, data.Weight }.Max() > 10000)
+            if (Math.Max(data.PackagedWeight, data.Weight) > 10000)
             {
                 return SizeType.Max;
             }
 
             long packagedVolume = data.PackagedHeight * data.PackagedLength * data.PackagedWidth;
             long volume = data.Height * data.Length * data.Width;
-
-            long minVolume = new[] { packagedVolume, volume }.Min();
+            
+            long minVolume = Math.Min(packagedVolume, volume);
 
             if (minVolume < 10000)
             {

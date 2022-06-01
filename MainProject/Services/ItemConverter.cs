@@ -7,22 +7,14 @@ using MainProject.Contracts.Externals;
 
 namespace MainProject.Services
 {
-    internal sealed class ItemConverter
+    internal static class ItemConverter
     {
-        public Item[] ConvertItems(IEnumerable<ItemDto> dtoItems)
+        public static List<Item> ConvertItems(IEnumerable<ItemDto> dtoItems)
         {
-            var items = new List<Item>();
-
-            foreach (ItemDto itemDto in dtoItems)
-            {
-                var item = new Item
+            return dtoItems.Select(itemDto => new Item
                 {
                     Id = itemDto.Id,
-                    Price = new Price
-                    {
-                        Currency = itemDto.PriceCurrency,
-                        Value = itemDto.PriceValue
-                    },
+                    Price = new Price { Currency = itemDto.PriceCurrency, Value = itemDto.PriceValue },
                     Sellers = itemDto.SellerIds.Select(s => new Seller { Id = s }).ToList(),
                     VolumeWeight = new VolumeWeightData
                     {
@@ -35,18 +27,9 @@ namespace MainProject.Services
                         PackagedWeight = itemDto.PackagedWeight,
                         PackagedWidth = itemDto.PackagedWidth
                     },
-                    SaleInfo = new SaleInfo
-                    {
-                        Rating = itemDto.Rating,
-                        IsActive = itemDto.IsActive,
-                        IsBestSeller = itemDto.IsBestSeller
-                    }
-                };
-
-                items.Add(item);
-            }
-
-            return items.ToArray();
+                    SaleInfo = new SaleInfo { Rating = itemDto.Rating, IsActive = itemDto.IsActive, IsBestSeller = itemDto.IsBestSeller }
+                })
+                .ToList();
         }
     }
 }
