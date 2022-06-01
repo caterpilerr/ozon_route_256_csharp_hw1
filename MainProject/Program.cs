@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text.Json;
 
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
 using MainProject.Contracts.Entities;
-using MainProject.Contracts.Entities.ValueObjects;
 using MainProject.Contracts.Externals;
 using MainProject.Enums;
 using MainProject.Services;
@@ -56,9 +54,7 @@ namespace MainProject
             [Benchmark]
             public void Process()
             {
-                var converter = new ItemConverter();
-
-                Item[] items = converter.ConvertItems(_dataFromExternalService);
+                var items = ItemConverter.ConvertItems(_dataFromExternalService);
 
                 Dictionary<SizeType, List<Item>> itemsBySize = items
                     .GroupBy(i => ItemSizeManager.GetSizeType(i.VolumeWeight))
@@ -72,9 +68,9 @@ namespace MainProject
             }
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Summary[] summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+            BenchmarkRunner.Run(typeof(Program).Assembly);
         }
     }
 }

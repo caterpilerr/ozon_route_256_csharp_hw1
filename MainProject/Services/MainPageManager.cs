@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 using MainProject.Contracts.Entities;
 using MainProject.Contracts.Entities.ValueObjects;
@@ -29,17 +28,12 @@ namespace MainProject.Services
                 return false;
             }
 
-            if (!item.Sellers.Any())
+            if (item.Sellers.Count == 0)
             {
                 return false;
             }
 
-            if (item.SaleInfo.Equals(BestSaleInfo) && CheckMinThreshold(item.Price))
-            {
-                return true;
-            }
-
-            return false;
+            return item.SaleInfo.Equals(BestSaleInfo) && CheckMinThreshold(item.Price);
         }
 
         private static bool CheckMinThreshold(Price price)
